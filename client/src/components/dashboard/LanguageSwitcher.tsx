@@ -25,7 +25,7 @@ export function LanguageSwitcher() {
       <DropdownMenuTrigger asChild>
         <Button variant="outline" className="flex items-center gap-2">
           <Globe className="h-4 w-4" />
-          <span>{language === "en" ? "English" : "עברית"}</span>
+          <span>{language === "en" ? t('english') : t('hebrew')}</span>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
@@ -33,13 +33,13 @@ export function LanguageSwitcher() {
           className={language === "en" ? "bg-accent text-accent-foreground" : ""}
           onClick={() => handleLanguageChange("en")}
         >
-          English
+          {t('english')}
         </DropdownMenuItem>
         <DropdownMenuItem
           className={language === "he" ? "bg-accent text-accent-foreground" : ""}
           onClick={() => handleLanguageChange("he")}
         >
-          עברית
+          {t('hebrew')}
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
