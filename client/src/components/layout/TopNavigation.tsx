@@ -11,8 +11,10 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { DateRangePicker } from "@/components/dashboard/DateRangePicker";
+import { LanguageSwitcher } from "@/components/dashboard/LanguageSwitcher";
 import { getInitials } from "@/lib/utils";
 import { useAuth } from "@/hooks/useAuth";
+import { useTranslation } from "@/hooks/useTranslation";
 
 interface TopNavigationProps {
   onMenuClick: () => void;
@@ -21,6 +23,7 @@ interface TopNavigationProps {
 
 export function TopNavigation({ onMenuClick, onExport }: TopNavigationProps) {
   const { user, logout } = useAuth();
+  const { t } = useTranslation();
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
 
   return (
@@ -35,7 +38,7 @@ export function TopNavigation({ onMenuClick, onExport }: TopNavigationProps) {
           <Menu className="h-5 w-5" />
         </Button>
         <div className="ml-2 md:hidden font-heading font-bold text-lg text-primary">
-          LMS Analytics
+          {t('lmsAnalytics')}
         </div>
       </div>
       
@@ -43,6 +46,11 @@ export function TopNavigation({ onMenuClick, onExport }: TopNavigationProps) {
         {/* Date Range Picker */}
         <div className="hidden md:block mr-4">
           <DateRangePicker />
+        </div>
+        
+        {/* Language Switcher */}
+        <div className="hidden md:block mr-4">
+          <LanguageSwitcher />
         </div>
         
         {/* Export Button */}
@@ -54,16 +62,16 @@ export function TopNavigation({ onMenuClick, onExport }: TopNavigationProps) {
               size="sm"
             >
               <Download className="h-4 w-4 mr-1" />
-              Export
+              {t('export')}
               <ChevronDown className="h-4 w-4 ml-1" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuItem onClick={() => onExport("csv")}>
-              Export as CSV
+              {t('exportAsCSV')}
             </DropdownMenuItem>
             <DropdownMenuItem onClick={() => onExport("pdf")}>
-              Export as PDF
+              {t('exportAsPDF')}
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
@@ -92,19 +100,19 @@ export function TopNavigation({ onMenuClick, onExport }: TopNavigationProps) {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuLabel>My Account</DropdownMenuLabel>
+            <DropdownMenuLabel>{t('myAccount')}</DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem className="cursor-pointer">
               <User className="h-4 w-4 mr-2" />
-              Profile
+              {t('profile')}
             </DropdownMenuItem>
             <DropdownMenuItem className="cursor-pointer">
               <Settings className="h-4 w-4 mr-2" />
-              Settings
+              {t('settings')}
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem className="cursor-pointer" onClick={logout}>
-              Log out
+              {t('logout')}
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

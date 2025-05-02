@@ -1,6 +1,7 @@
 import { Link, useLocation } from "wouter";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/hooks/useAuth";
+import { useTranslation } from "@/hooks/useTranslation";
 import { RoleSwitcher } from "@/components/dashboard/RoleSwitcher";
 import { 
   BarChartBig, 
@@ -20,6 +21,7 @@ interface SidebarProps {
 export function Sidebar({ collapsed = false }: SidebarProps) {
   const [location] = useLocation();
   const { user } = useAuth();
+  const { t } = useTranslation();
   
   const routes = [
     {
