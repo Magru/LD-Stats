@@ -1,0 +1,135 @@
+/**
+ * Admin styles for LearnDash BuddyBoss Analytics plugin
+ */
+
+.ldbb-analytics-app-container {
+    margin-top: 20px;
+    background: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 1px 1px rgba(0,0,0,0.04);
+}
+
+/* App loading state */
+.ldbb-analytics-loading {
+    text-align: center;
+    padding: 30px;
+}
+
+.ldbb-analytics-loading span {
+    display: inline-block;
+    vertical-align: middle;
+    width: 20px;
+    height: 20px;
+    margin: 0 5px;
+    background: #007cba;
+    border-radius: 100%;
+    animation: ldbb-analytics-loading 0.8s linear infinite alternate;
+}
+
+.ldbb-analytics-loading span:nth-child(1) {
+    animation-delay: 0s;
+}
+
+.ldbb-analytics-loading span:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.ldbb-analytics-loading span:nth-child(3) {
+    animation-delay: 0.4s;
+}
+
+@keyframes ldbb-analytics-loading {
+    0% {
+        opacity: 0.5;
+        transform: translateY(0);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(-5px);
+    }
+}
+
+/* Card styles */
+.ldbb-analytics-card {
+    background: #fff;
+    border: 1px solid #e2e4e7;
+    border-radius: 3px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.ldbb-analytics-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.ldbb-analytics-card-title {
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0;
+    color: #23282d;
+}
+
+.ldbb-analytics-card-actions {
+    display: flex;
+    align-items: center;
+}
+
+.ldbb-analytics-card-content {
+    position: relative;
+}
+
+/* Chart containers */
+.ldbb-analytics-chart-container {
+    position: relative;
+    height: 300px;
+    width: 100%;
+}
+
+/* Table styles */
+.ldbb-analytics-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.ldbb-analytics-table th,
+.ldbb-analytics-table td {
+    text-align: left;
+    padding: 10px;
+    border-bottom: 1px solid #e2e4e7;
+}
+
+.ldbb-analytics-table th {
+    background-color: #f5f5f5;
+    font-weight: 600;
+}
+
+.ldbb-analytics-table tr:last-child td {
+    border-bottom: none;
+}
+
+/* RTL support */
+body.rtl .ldbb-analytics-table th,
+body.rtl .ldbb-analytics-table td {
+    text-align: right;
+}
+
+/* Responsive layout */
+@media (max-width: 782px) {
+    .ldbb-analytics-card-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .ldbb-analytics-card-actions {
+        margin-top: 10px;
+    }
+    
+    .ldbb-analytics-table th,
+    .ldbb-analytics-table td {
+        padding: 8px;
+    }
+}
