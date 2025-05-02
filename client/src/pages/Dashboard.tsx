@@ -7,7 +7,8 @@ import { ForumActivityChart } from "@/components/dashboard/ForumActivityChart";
 import { TopCoursesTable } from "@/components/dashboard/TopCoursesTable";
 import { RecentActivitiesTable } from "@/components/dashboard/RecentActivitiesTable";
 import { DateRangePicker } from "@/components/dashboard/DateRangePicker";
-import { DateRange } from "react-day-picker";
+import { DateRange as DayPickerDateRange } from "react-day-picker";
+import { type DateRange } from "@shared/schema";
 import { format } from "date-fns";
 import { useAuth } from "@/hooks/useAuth";
 import { useUserRole } from "@/hooks/useUserRole";
@@ -17,12 +18,14 @@ export default function Dashboard() {
   const { user } = useAuth();
   const { role } = useUserRole();
   const { t } = useTranslation();
-  const [dateRange, setDateRange] = useState<{ startDate?: string; endDate?: string; preset?: string }>({
-    preset: "year"
+  const [dateRange, setDateRange] = useState<DateRange>({
+    preset: "year" as const
   });
   
-  const handleDateRangeChange = (range: DateRange) => {
-    const newDateRange: { startDate?: string; endDate?: string; preset?: string } = { preset: "custom" };
+  const handleDateRangeChange = (range: DayPickerDateRange) => {
+    const newDateRange: DateRange = { 
+      preset: "custom" as const
+    };
     
     if (range?.from) {
       newDateRange.startDate = format(range.from, "yyyy-MM-dd");
