@@ -1,6 +1,8 @@
 import { useUserEngagement } from "@/hooks/useDashboardStats";
 import { ChartContainer } from "./ChartContainer";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useTranslation } from "@/hooks/useTranslation";
+import { useLanguage } from "@/hooks/useLanguage";
 
 interface UserEngagementChartProps {
   dateRange?: {
@@ -12,6 +14,8 @@ interface UserEngagementChartProps {
 
 export function UserEngagementChart({ dateRange }: UserEngagementChartProps) {
   const { data, isLoading, error } = useUserEngagement(dateRange);
+  const { t } = useTranslation();
+  const { direction } = useLanguage();
   
   if (isLoading) {
     return (
@@ -32,9 +36,9 @@ export function UserEngagementChart({ dateRange }: UserEngagementChartProps) {
   if (error) {
     return (
       <div className="bg-white rounded-lg shadow p-4 border border-border">
-        <h2 className="text-lg font-heading font-semibold text-foreground mb-4">User Engagement</h2>
+        <h2 className="text-lg font-heading font-semibold text-foreground mb-4">{t('userEngagement')}</h2>
         <div className="bg-red-50 border border-red-200 rounded-md p-4">
-          <p className="text-red-600">Failed to load user engagement data</p>
+          <p className="text-red-600">{t('failedToLoadData')}</p>
         </div>
       </div>
     );
@@ -66,14 +70,14 @@ export function UserEngagementChart({ dateRange }: UserEngagementChartProps) {
   ];
   
   const timeRangeFilters = [
-    { key: 'daily', label: 'Daily' },
-    { key: 'weekly', label: 'Weekly' },
-    { key: 'monthly', label: 'Monthly' }
+    { key: 'daily' as const, label: t('daily') },
+    { key: 'weekly' as const, label: t('weekly') },
+    { key: 'monthly' as const, label: t('monthly') }
   ];
   
   return (
     <ChartContainer
-      title="User Engagement"
+      title={t('userEngagement')}
       chartType="line"
       data={chartData}
       labels={engagementData.map(item => item.date)}
