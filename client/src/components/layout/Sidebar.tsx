@@ -95,24 +95,26 @@ export function Sidebar({ collapsed = false }: SidebarProps) {
         
         <nav className="space-y-1">
           {routes.map((route) => (
-            <Link 
+            <div
               key={route.href} 
-              href={route.href}
+              className="w-full"
             >
-              <a className={cn(
-                "flex items-center py-2 px-2 text-sm font-medium rounded-md transition-colors",
-                location === route.href
-                  ? "bg-primary text-primary-foreground"
-                  : "text-sidebar-foreground hover:bg-sidebar-accent",
-                collapsed ? "justify-center" : ""
-              )}>
-                <route.icon className={cn(
-                  "flex-shrink-0",
-                  collapsed ? "w-6 h-6" : "w-5 h-5 mr-3"
-                )} />
-                {!collapsed && t(route.titleKey as TranslationKey)}
-              </a>
-            </Link>
+              <Link href={route.href}>
+                <div className={cn(
+                  "flex items-center py-2 px-2 text-sm font-medium rounded-md transition-colors cursor-pointer",
+                  location === route.href
+                    ? "bg-primary text-primary-foreground"
+                    : "text-sidebar-foreground hover:bg-sidebar-accent",
+                  collapsed ? "justify-center" : ""
+                )}>
+                  <route.icon className={cn(
+                    "flex-shrink-0",
+                    collapsed ? "w-6 h-6" : "w-5 h-5 mr-3"
+                  )} />
+                  {!collapsed && t(route.titleKey as TranslationKey)}
+                </div>
+              </Link>
+            </div>
           ))}
         </nav>
       </div>
