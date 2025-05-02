@@ -67,15 +67,8 @@ module.exports = {
       filename: '[name].css'
     })
   ],
+  // Disable code splitting for WordPress bundle
   optimization: {
-    splitChunks: {
-      cacheGroups: {
-        vendors: {
-          test: /[\\/]node_modules[\\/]/,
-          name: 'vendors',
-          chunks: 'all'
-        }
-      }
-    }
+    splitChunks: false
   }
 };

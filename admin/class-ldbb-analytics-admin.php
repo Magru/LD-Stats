@@ -41,25 +41,18 @@ class LDBB_Analytics_Admin {
         // Enqueue React bundle for dashboard
         wp_enqueue_script(
             'ldbb-analytics-react-bundle',
-            LDBB_ANALYTICS_PLUGIN_URL . 'dist/main.bundle.js',
+            LDBB_ANALYTICS_PLUGIN_URL . 'dist/wordpress-bundle.js',
             array('jquery', 'ldbb-analytics-admin'),
             LDBB_ANALYTICS_VERSION,
             true
         );
         
-        // Enqueue React vendors
-        wp_enqueue_script(
-            'ldbb-analytics-react-vendors',
-            LDBB_ANALYTICS_PLUGIN_URL . 'dist/vendors.bundle.js',
-            array('jquery', 'ldbb-analytics-admin'),
-            LDBB_ANALYTICS_VERSION,
-            true
-        );
+        // Enqueue React vendors - no longer separate file, part of bundle
         
         // Enqueue React styles
         wp_enqueue_style(
             'ldbb-analytics-react-styles',
-            LDBB_ANALYTICS_PLUGIN_URL . 'dist/main.css',
+            LDBB_ANALYTICS_PLUGIN_URL . 'dist/index.css',
             array(),
             LDBB_ANALYTICS_VERSION,
             'all'

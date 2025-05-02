@@ -63,41 +63,34 @@
         } else {
             // Try to load React components
             var scriptSrc = window.LDBB_ANALYTICS.pluginUrl + 'dist/wordpress-bundle.js';
-            var vendorSrc = window.LDBB_ANALYTICS.pluginUrl + 'dist/vendors.js';
             
-            // Load vendor scripts first if available
-            var vendorScript = document.createElement('script');
-            vendorScript.src = vendorSrc;
-            vendorScript.onload = function() {
-                // Then load main bundle
-                var script = document.createElement('script');
-                script.src = scriptSrc;
-                script.onload = function() {
-                    console.log('LearnDash BuddyBoss Analytics: React bundle loaded.');
-                    
-                    // Wait a moment for the script to initialize
-                    setTimeout(function() {
-                        initializeReactMounts();
-                    }, 100);
-                };
-                script.onerror = function() {
-                    console.error('LearnDash BuddyBoss Analytics: Failed to load React bundle.');
-                    $('.ldbb-analytics-loading').hide();
-                };
-                document.head.appendChild(script);
+            // Load the main bundle
+            var script = document.createElement('script');
+            script.src = scriptSrc;
+            script.onload = function() {
+                console.log('LearnDash BuddyBoss Analytics: React bundle loaded.');
+                
+                // Wait a moment for the script to initialize
+                setTimeout(function() {
+                    initializeReactMounts();
+                }, 100);
             };
-            vendorScript.onerror = function() {
-                // If vendor script fails, try just the main bundle
-                var script = document.createElement('script');
-                script.src = scriptSrc;
-                script.onload = function() {
-                    setTimeout(function() {
-                        initializeReactMounts();
-                    }, 100);
-                };
-                document.head.appendChild(script);
+            script.onerror = function(err) {
+                console.error('LearnDash BuddyBoss Analytics: Failed to load React bundle.', err);
+                $('.ldbb-analytics-loading').hide();
+                
+                // Display error message 
+                $('.ldbb-analytics-app-container > div[id^="ldbb-analytics"]').each(function() {
+                    var $this = $(this);
+                    $this.html(
+                        '<div class="ldbb-analytics-error">' +
+                        '<p>Failed to load analytics dashboard. Please check console for errors.</p>' +
+                        '<p>Error loading: ' + scriptSrc + '</p>' +
+                        '</div>'
+                    );
+                });
             };
-            document.head.appendChild(vendorScript);
+            document.head.appendChild(script);
             
             console.log('LearnDash BuddyBoss Analytics: Attempting to load React bundle...');
         }

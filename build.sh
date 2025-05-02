@@ -17,9 +17,10 @@ mkdir -p build/learndash-buddyboss-analytics/dist
 
 # Компилируем React приложение для WordPress с помощью webpack
 echo "Компиляция React приложения для WordPress..."
-# Если у вас есть локальная установка webpack, используйте следующую команду:
-# npx webpack --config wp-webpack.config.js
-# Поскольку мы не можем изменять package.json, мы будем использовать стандартную сборку Vite
+node node_modules/.bin/webpack --config wp-webpack.config.js
+
+# Собираем также стандартный Vite проект для разработки
+echo "Компиляция стандартного Vite проекта..."
 npm run build
 
 # Копируем PHP файлы

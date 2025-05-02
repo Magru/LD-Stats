@@ -2,6 +2,24 @@
  * Admin styles for LearnDash BuddyBoss Analytics plugin
  */
 
+/* Error message */
+.ldbb-analytics-error {
+    background-color: #f8d7da;
+    color: #721c24;
+    padding: 20px;
+    border-radius: 5px;
+    border: 1px solid #f5c6cb;
+    margin-bottom: 20px;
+}
+
+.ldbb-analytics-error p {
+    margin: 0 0 10px 0;
+}
+
+.ldbb-analytics-error p:last-child {
+    margin-bottom: 0;
+}
+
 .ldbb-analytics-app-container {
     margin-top: 20px;
     background: #fff;
