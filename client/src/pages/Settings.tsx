@@ -1,339 +1,250 @@
-import { useState } from "react";
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
-import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
-import { apiRequest } from "@/lib/queryClient";
-import { useAuth } from "@/hooks/useAuth";
+import { useLanguage } from '@/hooks/useLanguage';
+import { useTranslation } from '@/hooks/useTranslation';
+
+interface SettingsFormData {
+  dateRangeDefault: string;
+  enableRtlSupport: boolean;
+  enableNotifications: boolean;
+  refreshInterval: number;
+  chartsTheme: string;
+  defaultPage: string;
+}
 
 export default function Settings() {
-  const { user } = useAuth();
   const { toast } = useToast();
-  const [saving, setSaving] = useState(false);
+  const { language, setLanguage, direction, setDirection } = useLanguage();
+  const { t } = useTranslation();
   
-  // Dashboard preferences
-  const [dashboardPreferences, setDashboardPreferences] = useState({
-    defaultDateRange: "year",
-    enableRealTimeUpdates: true,
-    showKPIChanges: true,
-    chartColorScheme: "default"
-  });
-  
-  // Email notification settings
-  const [emailNotifications, setEmailNotifications] = useState({
-    courseCompletion: true,
-    newForumPosts: true,
-    quizResults: true,
-    groupActivity: false,
-    weeklyDigest: true
-  });
-  
-  const handleSaveDashboardPreferences = async () => {
-    try {
-      setSaving(true);
-      
-      // This would use the actual API in a real implementation
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      toast({
-        title: "Settings Saved",
-        description: "Your dashboard preferences have been updated successfully."
-      });
-    } catch (error) {
-      toast({
-        title: "Error Saving Settings",
-        description: "There was a problem saving your settings. Please try again.",
-        variant: "destructive"
-      });
-    } finally {
-      setSaving(false);
-    }
+  // Default settings from WordPress global
+  const wpSettings = (window as any).LDBB_ANALYTICS?.settings || {
+    date_range_default: 'month',
+    enable_rtl_support: false,
+    enable_notifications: true,
+    refresh_interval: 5,
+    charts_theme: 'light',
+    default_page: 'dashboard'
   };
   
-  const handleSaveNotificationSettings = async () => {
+  const [settings, setSettings] = useState<SettingsFormData>({
+    dateRangeDefault: wpSettings.date_range_default,
+    enableRtlSupport: wpSettings.enable_rtl_support,
+    enableNotifications: wpSettings.enable_notifications,
+    refreshInterval: wpSettings.refresh_interval,
+    chartsTheme: wpSettings.charts_theme,
+    defaultPage: wpSettings.default_page
+  });
+  
+  // Update direction when RTL setting changes
+  useEffect(() => {
+    // If language is Hebrew, force RTL
+    if (language === 'he') {
+      setDirection('rtl');
+    } else {
+      // Otherwise respect the setting
+      setDirection(settings.enableRtlSupport ? 'rtl' : 'ltr');
+    }
+  }, [settings.enableRtlSupport, language, setDirection]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
     try {
-      setSaving(true);
+      // Format the data for WordPress settings API
+      const formattedData = {
+        date_range_default: settings.dateRangeDefault,
+        enable_rtl_support: settings.enableRtlSupport,
+        enable_notifications: settings.enableNotifications,
+        refresh_interval: settings.refreshInterval,
+        charts_theme: settings.chartsTheme,
+        default_page: settings.defaultPage
+      };
       
-      // This would use the actual API in a real implementation
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      toast({
-        title: "Settings Saved",
-        description: "Your notification preferences have been updated successfully."
-      });
+      // Use the WordPress API client to save settings
+      if ((window as any).LDBB_ANALYTICS?.apiRequest) {
+        await (window as any).LDBB_ANALYTICS.apiRequest('settings', 'POST', formattedData);
+        
+        toast({
+          title: t('settings.savedSuccess'),
+          description: t('settings.settingsSavedDescription'),
+          variant: "default",
+        });
+      } else {
+        // Fallback to native form submission if API not available
+        console.warn('WordPress API client not available. Settings will be saved by the native form.');
+      }
     } catch (error) {
+      console.error('Failed to save settings:', error);
       toast({
-        title: "Error Saving Settings",
-        description: "There was a problem saving your settings. Please try again.",
-        variant: "destructive"
+        title: t('settings.saveError'),
+        description: t('settings.settingsSaveErrorDescription'),
+        variant: "destructive",
       });
-    } finally {
-      setSaving(false);
     }
   };
-  
+
   return (
-    <div>
-      <div className="mb-6">
-        <h1 className="text-2xl font-heading font-bold">Settings</h1>
-        <p className="mt-1 text-sm text-muted-foreground">
-          Manage your dashboard and notification preferences
-        </p>
-      </div>
+    <div className="container mx-auto p-4" dir={direction}>
+      <h2 className="text-3xl font-bold mb-6">{t('settings.title')}</h2>
       
-      <Tabs defaultValue="dashboard" className="space-y-6">
-        <TabsList>
-          <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
-          <TabsTrigger value="notifications">Notifications</TabsTrigger>
-          <TabsTrigger value="account">Account</TabsTrigger>
+      <Tabs defaultValue="general" className="w-full">
+        <TabsList className="mb-4">
+          <TabsTrigger value="general">{t('settings.tabs.general')}</TabsTrigger>
+          <TabsTrigger value="appearance">{t('settings.tabs.appearance')}</TabsTrigger>
+          <TabsTrigger value="advanced">{t('settings.tabs.advanced')}</TabsTrigger>
         </TabsList>
         
-        <TabsContent value="dashboard">
-          <Card>
-            <CardHeader>
-              <CardTitle>Dashboard Preferences</CardTitle>
-              <CardDescription>
-                Configure how your analytics dashboard appears and functions
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="space-y-2">
-                <Label htmlFor="defaultDateRange">Default Date Range</Label>
-                <Select 
-                  value={dashboardPreferences.defaultDateRange}
-                  onValueChange={(value) => setDashboardPreferences({
-                    ...dashboardPreferences,
-                    defaultDateRange: value
-                  })}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select default date range" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="week">Last 7 days</SelectItem>
-                    <SelectItem value="month">Last 30 days</SelectItem>
-                    <SelectItem value="year">This year</SelectItem>
-                    <SelectItem value="custom">Custom range</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              
-              <div className="space-y-2">
-                <Label htmlFor="chartColorScheme">Chart Color Scheme</Label>
-                <Select 
-                  value={dashboardPreferences.chartColorScheme}
-                  onValueChange={(value) => setDashboardPreferences({
-                    ...dashboardPreferences,
-                    chartColorScheme: value
-                  })}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select chart color scheme" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="default">Default</SelectItem>
-                    <SelectItem value="monochrome">Monochrome</SelectItem>
-                    <SelectItem value="pastel">Pastel</SelectItem>
-                    <SelectItem value="vibrant">Vibrant</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              
-              <div className="flex items-center justify-between">
-                <div className="space-y-0.5">
-                  <Label htmlFor="realTimeUpdates">Real-time Updates</Label>
-                  <p className="text-sm text-muted-foreground">
-                    Update dashboard data in real-time
-                  </p>
+        <form onSubmit={handleSubmit}>
+          <TabsContent value="general">
+            <Card>
+              <CardHeader>
+                <CardTitle>{t('settings.generalSettings')}</CardTitle>
+                <CardDescription>{t('settings.generalDescription')}</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div className="space-y-2">
+                  <Label htmlFor="defaultPage">{t('settings.defaultPage')}</Label>
+                  <Select
+                    value={settings.defaultPage}
+                    onValueChange={(value) => setSettings({...settings, defaultPage: value})}
+                  >
+                    <SelectTrigger id="defaultPage">
+                      <SelectValue placeholder={t('settings.selectDefaultPage')} />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="dashboard">{t('nav.dashboard')}</SelectItem>
+                      <SelectItem value="courses">{t('nav.courses')}</SelectItem>
+                      <SelectItem value="users">{t('nav.users')}</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
-                <Switch 
-                  id="realTimeUpdates"
-                  checked={dashboardPreferences.enableRealTimeUpdates}
-                  onCheckedChange={(checked) => setDashboardPreferences({
-                    ...dashboardPreferences,
-                    enableRealTimeUpdates: checked
-                  })}
-                />
-              </div>
-              
-              <div className="flex items-center justify-between">
-                <div className="space-y-0.5">
-                  <Label htmlFor="showKPIChanges">Show KPI Changes</Label>
-                  <p className="text-sm text-muted-foreground">
-                    Display percent change on KPI cards
-                  </p>
-                </div>
-                <Switch 
-                  id="showKPIChanges"
-                  checked={dashboardPreferences.showKPIChanges}
-                  onCheckedChange={(checked) => setDashboardPreferences({
-                    ...dashboardPreferences,
-                    showKPIChanges: checked
-                  })}
-                />
-              </div>
-            </CardContent>
-            <CardFooter className="flex justify-end">
-              <Button onClick={handleSaveDashboardPreferences} disabled={saving}>
-                {saving ? "Saving..." : "Save Changes"}
-              </Button>
-            </CardFooter>
-          </Card>
-        </TabsContent>
-        
-        <TabsContent value="notifications">
-          <Card>
-            <CardHeader>
-              <CardTitle>Notification Settings</CardTitle>
-              <CardDescription>
-                Configure when and how you receive notifications
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="space-y-4">
-                <h3 className="text-sm font-medium">Email Notifications</h3>
                 
-                <div className="flex items-center justify-between">
-                  <Label htmlFor="courseCompletion" className="flex flex-col space-y-1">
-                    <span>Course Completion</span>
-                    <span className="font-normal text-sm text-muted-foreground">
-                      Receive email when a student completes a course
-                    </span>
-                  </Label>
-                  <Switch 
-                    id="courseCompletion"
-                    checked={emailNotifications.courseCompletion}
-                    onCheckedChange={(checked) => setEmailNotifications({
-                      ...emailNotifications,
-                      courseCompletion: checked
-                    })}
-                  />
+                <div className="space-y-2">
+                  <Label htmlFor="dateRangeDefault">{t('settings.defaultDateRange')}</Label>
+                  <Select
+                    value={settings.dateRangeDefault}
+                    onValueChange={(value) => setSettings({...settings, dateRangeDefault: value})}
+                  >
+                    <SelectTrigger id="dateRangeDefault">
+                      <SelectValue placeholder={t('settings.selectDateRange')} />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="week">{t('dateRange.week')}</SelectItem>
+                      <SelectItem value="month">{t('dateRange.month')}</SelectItem>
+                      <SelectItem value="quarter">{t('dateRange.quarter')}</SelectItem>
+                      <SelectItem value="year">{t('dateRange.year')}</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
                 
                 <div className="flex items-center justify-between">
-                  <Label htmlFor="newForumPosts" className="flex flex-col space-y-1">
-                    <span>New Forum Posts</span>
-                    <span className="font-normal text-sm text-muted-foreground">
-                      Receive email for new posts in followed forums
-                    </span>
-                  </Label>
-                  <Switch 
-                    id="newForumPosts"
-                    checked={emailNotifications.newForumPosts}
-                    onCheckedChange={(checked) => setEmailNotifications({
-                      ...emailNotifications,
-                      newForumPosts: checked
-                    })}
+                  <Label htmlFor="enableNotifications">{t('settings.enableNotifications')}</Label>
+                  <Switch
+                    id="enableNotifications"
+                    checked={settings.enableNotifications}
+                    onCheckedChange={(checked) => setSettings({...settings, enableNotifications: checked})}
                   />
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+          
+          <TabsContent value="appearance">
+            <Card>
+              <CardHeader>
+                <CardTitle>{t('settings.appearanceSettings')}</CardTitle>
+                <CardDescription>{t('settings.appearanceDescription')}</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div className="space-y-2">
+                  <Label htmlFor="chartsTheme">{t('settings.chartsTheme')}</Label>
+                  <Select
+                    value={settings.chartsTheme}
+                    onValueChange={(value) => setSettings({...settings, chartsTheme: value})}
+                  >
+                    <SelectTrigger id="chartsTheme">
+                      <SelectValue placeholder={t('settings.selectTheme')} />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="light">{t('theme.light')}</SelectItem>
+                      <SelectItem value="dark">{t('theme.dark')}</SelectItem>
+                      <SelectItem value="auto">{t('theme.auto')}</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
                 
                 <div className="flex items-center justify-between">
-                  <Label htmlFor="quizResults" className="flex flex-col space-y-1">
-                    <span>Quiz Results</span>
-                    <span className="font-normal text-sm text-muted-foreground">
-                      Receive email when students complete quizzes
-                    </span>
-                  </Label>
-                  <Switch 
-                    id="quizResults"
-                    checked={emailNotifications.quizResults}
-                    onCheckedChange={(checked) => setEmailNotifications({
-                      ...emailNotifications,
-                      quizResults: checked
-                    })}
+                  <div>
+                    <Label htmlFor="enableRtlSupport">{t('settings.enableRtl')}</Label>
+                    <p className="text-sm text-muted-foreground">{t('settings.rtlDescription')}</p>
+                  </div>
+                  <Switch
+                    id="enableRtlSupport"
+                    checked={settings.enableRtlSupport}
+                    onCheckedChange={(checked) => setSettings({...settings, enableRtlSupport: checked})}
                   />
                 </div>
                 
-                <div className="flex items-center justify-between">
-                  <Label htmlFor="groupActivity" className="flex flex-col space-y-1">
-                    <span>Group Activity</span>
-                    <span className="font-normal text-sm text-muted-foreground">
-                      Receive email updates about group activities
-                    </span>
-                  </Label>
-                  <Switch 
-                    id="groupActivity"
-                    checked={emailNotifications.groupActivity}
-                    onCheckedChange={(checked) => setEmailNotifications({
-                      ...emailNotifications,
-                      groupActivity: checked
-                    })}
-                  />
+                <div className="space-y-2">
+                  <Label htmlFor="language">{t('settings.language')}</Label>
+                  <Select
+                    value={language}
+                    onValueChange={(value) => setLanguage(value)}
+                  >
+                    <SelectTrigger id="language">
+                      <SelectValue placeholder={t('settings.selectLanguage')} />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="en">English</SelectItem>
+                      <SelectItem value="he">עברית (Hebrew)</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
-                
-                <div className="flex items-center justify-between">
-                  <Label htmlFor="weeklyDigest" className="flex flex-col space-y-1">
-                    <span>Weekly Digest</span>
-                    <span className="font-normal text-sm text-muted-foreground">
-                      Receive weekly summary of key statistics
-                    </span>
-                  </Label>
-                  <Switch 
-                    id="weeklyDigest"
-                    checked={emailNotifications.weeklyDigest}
-                    onCheckedChange={(checked) => setEmailNotifications({
-                      ...emailNotifications,
-                      weeklyDigest: checked
-                    })}
-                  />
+              </CardContent>
+            </Card>
+          </TabsContent>
+          
+          <TabsContent value="advanced">
+            <Card>
+              <CardHeader>
+                <CardTitle>{t('settings.advancedSettings')}</CardTitle>
+                <CardDescription>{t('settings.advancedDescription')}</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div className="space-y-2">
+                  <Label htmlFor="refreshInterval">{t('settings.refreshInterval')}</Label>
+                  <div className="flex items-center gap-4">
+                    <Input
+                      id="refreshInterval"
+                      type="number"
+                      min="1"
+                      max="60"
+                      value={settings.refreshInterval}
+                      onChange={(e) => setSettings({...settings, refreshInterval: parseInt(e.target.value) || 5})}
+                      className="w-24"
+                    />
+                    <span className="text-sm text-muted-foreground">{t('settings.minutes')}</span>
+                  </div>
+                  <p className="text-sm text-muted-foreground">{t('settings.refreshIntervalDescription')}</p>
                 </div>
-              </div>
-            </CardContent>
-            <CardFooter className="flex justify-end">
-              <Button onClick={handleSaveNotificationSettings} disabled={saving}>
-                {saving ? "Saving..." : "Save Changes"}
-              </Button>
-            </CardFooter>
-          </Card>
-        </TabsContent>
-        
-        <TabsContent value="account">
-          <Card>
-            <CardHeader>
-              <CardTitle>Account Settings</CardTitle>
-              <CardDescription>
-                Manage your account details and preferences
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="space-y-2">
-                <Label htmlFor="fullName">Full Name</Label>
-                <Input 
-                  id="fullName" 
-                  defaultValue={user?.displayName || ""}
-                  placeholder="Your full name"
-                />
-              </div>
-              
-              <div className="space-y-2">
-                <Label htmlFor="email">Email Address</Label>
-                <Input 
-                  id="email" 
-                  type="email" 
-                  defaultValue={user?.email || ""}
-                  placeholder="Your email address"
-                />
-              </div>
-              
-              <div className="space-y-2">
-                <Label htmlFor="role">Role</Label>
-                <Input 
-                  id="role" 
-                  value={user?.role === "admin" ? "Administrator" : user?.role === "instructor" ? "Instructor" : "Student"}
-                  disabled
-                />
-              </div>
-              
-              <div className="pt-4 border-t">
-                <Button variant="outline">Change Password</Button>
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
+              </CardContent>
+            </Card>
+          </TabsContent>
+          
+          <div className="mt-6 flex justify-end">
+            <Button type="submit" className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700">
+              {t('settings.saveChanges')}
+            </Button>
+          </div>
+        </form>
       </Tabs>
     </div>
   );

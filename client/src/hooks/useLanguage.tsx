@@ -7,6 +7,7 @@ interface LanguageContextType {
   language: Language;
   direction: Direction;
   setLanguage: (lang: Language) => void;
+  setDirection: (dir: Direction) => void;
 }
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);

@@ -5,6 +5,14 @@
 class LDBB_Analytics_Admin {
 
     /**
+     * Initialize the class and set its properties.
+     */
+    public function __construct() {
+        // Register settings
+        add_action('admin_init', array($this, 'register_settings'));
+    }
+
+    /**
      * Register the stylesheets for the admin area.
      */
     public function enqueue_styles() {
@@ -185,5 +193,57 @@ class LDBB_Analytics_Admin {
      */
     public function display_plugin_admin_settings() {
         require_once LDBB_ANALYTICS_PLUGIN_DIR . 'admin/partials/ldbb-analytics-admin-settings.php';
+    }
+    
+    /**
+     * Register plugin settings
+     */
+    public function register_settings() {
+        register_setting(
+            'ldbb_analytics_settings_group', // Option group
+            'ldbb_analytics_settings', // Option name
+            array($this, 'sanitize_settings') // Sanitize callback
+        );
+    }
+    
+    /**
+     * Sanitize settings before saving to database
+     */
+    public function sanitize_settings($input) {
+        $sanitized_input = array();
+        
+        // Date Range Default
+        if (isset($input['date_range_default'])) {
+            $sanitized_input['date_range_default'] = sanitize_text_field($input['date_range_default']);
+        }
+        
+        // RTL Support
+        $sanitized_input['enable_rtl_support'] = isset($input['enable_rtl_support']) ? true : false;
+        
+        // Notifications
+        $sanitized_input['enable_notifications'] = isset($input['enable_notifications']) ? true : false;
+        
+        // Refresh Interval (numeric)
+        if (isset($input['refresh_interval'])) {
+            $sanitized_input['refresh_interval'] = absint($input['refresh_interval']);
+            if ($sanitized_input['refresh_interval'] < 1) {
+                $sanitized_input['refresh_interval'] = 1;
+            }
+            if ($sanitized_input['refresh_interval'] > 60) {
+                $sanitized_input['refresh_interval'] = 60;
+            }
+        }
+        
+        // Charts Theme
+        if (isset($input['charts_theme'])) {
+            $sanitized_input['charts_theme'] = sanitize_text_field($input['charts_theme']);
+        }
+        
+        // Default Page
+        if (isset($input['default_page'])) {
+            $sanitized_input['default_page'] = sanitize_text_field($input['default_page']);
+        }
+        
+        return $sanitized_input;
     }
 }

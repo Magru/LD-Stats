@@ -41,19 +41,65 @@
             var pageName = window.LDBB_ANALYTICS.page || 'dashboard';
             var containers = {
                 'dashboard': 'ldbb-analytics-root',
-                'course-stats': 'ldbb-analytics-course-stats-root',
-                'forum-stats': 'ldbb-analytics-forum-stats-root',
-                'group-stats': 'ldbb-analytics-group-stats-root',
-                'quiz-stats': 'ldbb-analytics-quiz-stats-root',
-                'user-stats': 'ldbb-analytics-user-stats-root',
+                'courses': 'ldbb-analytics-course-stats-root',
+                'forums': 'ldbb-analytics-forum-stats-root',
+                'groups': 'ldbb-analytics-group-stats-root',
+                'quizzes': 'ldbb-analytics-quiz-stats-root',
+                'users': 'ldbb-analytics-user-stats-root',
                 'settings': 'ldbb-analytics-settings-root',
             };
             
             if (containers[pageName]) {
                 window.LDBB_ANALYTICS_REACT.mountReactApp(containers[pageName], pageName);
+                
+                // If we're on the settings page, hide the fallback form
+                if (pageName === 'settings') {
+                    $('.ldbb-analytics-settings-fallback').hide();
+                }
+                
+                // Signal that React is loaded
+                window.LDBB_ANALYTICS.reactLoaded = true;
             }
         } else {
-            console.log('LearnDash BuddyBoss Analytics: Waiting for React bundle to load...');
+            // Try to load React components
+            var scriptSrc = window.LDBB_ANALYTICS.pluginUrl + 'dist/wordpress-bundle.js';
+            var vendorSrc = window.LDBB_ANALYTICS.pluginUrl + 'dist/vendors.js';
+            
+            // Load vendor scripts first if available
+            var vendorScript = document.createElement('script');
+            vendorScript.src = vendorSrc;
+            vendorScript.onload = function() {
+                // Then load main bundle
+                var script = document.createElement('script');
+                script.src = scriptSrc;
+                script.onload = function() {
+                    console.log('LearnDash BuddyBoss Analytics: React bundle loaded.');
+                    
+                    // Wait a moment for the script to initialize
+                    setTimeout(function() {
+                        initializeReactMounts();
+                    }, 100);
+                };
+                script.onerror = function() {
+                    console.error('LearnDash BuddyBoss Analytics: Failed to load React bundle.');
+                    $('.ldbb-analytics-loading').hide();
+                };
+                document.head.appendChild(script);
+            };
+            vendorScript.onerror = function() {
+                // If vendor script fails, try just the main bundle
+                var script = document.createElement('script');
+                script.src = scriptSrc;
+                script.onload = function() {
+                    setTimeout(function() {
+                        initializeReactMounts();
+                    }, 100);
+                };
+                document.head.appendChild(script);
+            };
+            document.head.appendChild(vendorScript);
+            
+            console.log('LearnDash BuddyBoss Analytics: Attempting to load React bundle...');
         }
     }
 
