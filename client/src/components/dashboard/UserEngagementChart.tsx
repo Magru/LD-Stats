@@ -3,13 +3,10 @@ import { ChartContainer } from "./ChartContainer";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useTranslation } from "@/hooks/useTranslation";
 import { useLanguage } from "@/hooks/useLanguage";
+import { type DateRange } from "@shared/schema";
 
 interface UserEngagementChartProps {
-  dateRange?: {
-    startDate?: string;
-    endDate?: string;
-    preset?: string;
-  };
+  dateRange?: DateRange;
 }
 
 export function UserEngagementChart({ dateRange }: UserEngagementChartProps) {

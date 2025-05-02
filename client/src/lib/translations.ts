@@ -84,7 +84,8 @@ export type TranslationKey =
   | 'replies'
   | 'topics'
   | 'popularThreads'
-  | 'mostActiveForums';
+  | 'mostActiveForums'
+  | 'failedToLoadData';
 
 // Define the structure of our translations object
 type Translations = {
@@ -431,6 +432,10 @@ export const translations: Translations = {
   mostActiveForums: {
     en: 'Most Active Forums',
     he: 'פורומים פעילים ביותר'
+  },
+  failedToLoadData: {
+    en: 'Failed to load data',
+    he: 'טעינת הנתונים נכשלה'
   }
 };
 
