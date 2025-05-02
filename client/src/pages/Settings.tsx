@@ -7,7 +7,7 @@ import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
-import { useLanguage } from '@/hooks/useLanguage';
+import { useLanguage, Language } from '@/hooks/useLanguage';
 import { useTranslation } from '@/hooks/useTranslation';
 
 interface SettingsFormData {
@@ -197,7 +197,7 @@ export default function Settings() {
                   <Label htmlFor="language">{t('settings.language')}</Label>
                   <Select
                     value={language}
-                    onValueChange={(value) => setLanguage(value)}
+                    onValueChange={(value) => setLanguage(value as Language)}
                   >
                     <SelectTrigger id="language">
                       <SelectValue placeholder={t('settings.selectLanguage')} />

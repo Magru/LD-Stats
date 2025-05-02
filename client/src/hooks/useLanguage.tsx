@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 
 type Direction = "ltr" | "rtl";
-type Language = "en" | "he";
+export type Language = "en" | "he";
 
 interface LanguageContextType {
   language: Language;
@@ -43,6 +43,7 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
         language,
         direction,
         setLanguage,
+        setDirection,
       }}
     >
       {children}
@@ -58,6 +59,7 @@ export function useLanguage() {
       language: "en" as Language,
       direction: "ltr" as Direction,
       setLanguage: () => {},
+      setDirection: () => {},
     };
   }
   
