@@ -3,6 +3,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import Chart from "chart.js/auto";
+import { useLanguage } from "@/hooks/useLanguage";
+import { useTranslation } from "@/hooks/useTranslation";
 
 type TimeRange = "daily" | "weekly" | "monthly" | "all";
 
@@ -37,6 +39,8 @@ export function ChartContainer({
   const [activeFilter, setActiveFilter] = useState<TimeRange>(initialFilterKey);
   const chartRef = useRef<HTMLCanvasElement>(null);
   const chartInstance = useRef<Chart | null>(null);
+  const { direction } = useLanguage();
+  const { t } = useTranslation();
 
   // Generate a unique ID for the chart canvas
   const chartId = useRef(`chart-${Math.random().toString(36).substring(2, 9)}`);
@@ -72,11 +76,14 @@ export function ChartContainer({
           labels: {
             usePointStyle: true,
             boxWidth: 6,
+            textDirection: direction, // Support RTL text direction
           },
         },
         tooltip: {
           mode: 'index',
           intersect: false,
+          rtl: direction === 'rtl', // Support RTL tooltip
+          textDirection: direction, // Support RTL text direction
         },
       },
       scales: chartType !== 'doughnut' && chartType !== 'pie' && chartType !== 'polarArea' ? {
@@ -111,7 +118,7 @@ export function ChartContainer({
         chartInstance.current.destroy();
       }
     };
-  }, [chartType, data, labels, activeFilter, options, aspectRatio]);
+  }, [chartType, data, labels, activeFilter, options, aspectRatio, direction]);
 
   return (
     <Card className={cn("border shadow-sm", className)}>

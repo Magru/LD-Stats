@@ -1,9 +1,13 @@
 import { useCourseEnrollment } from "@/hooks/useDashboardStats";
 import { ChartContainer } from "./ChartContainer";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useTranslation } from "@/hooks/useTranslation";
+import { useLanguage } from "@/hooks/useLanguage";
 
 export function CourseEnrollmentChart() {
   const { data, isLoading, error } = useCourseEnrollment();
+  const { t } = useTranslation();
+  const { direction } = useLanguage();
   
   if (isLoading) {
     return (
@@ -20,9 +24,9 @@ export function CourseEnrollmentChart() {
   if (error) {
     return (
       <div className="bg-white rounded-lg shadow p-4 border border-border">
-        <h2 className="text-lg font-heading font-semibold text-foreground mb-4">Course Enrollment</h2>
+        <h2 className="text-lg font-heading font-semibold text-foreground mb-4">{t('courseEnrollmentByCategory')}</h2>
         <div className="bg-red-50 border border-red-200 rounded-md p-4">
-          <p className="text-red-600">Failed to load course enrollment data</p>
+          <p className="text-red-600">{t('failedToLoadData')}</p>
         </div>
       </div>
     );
@@ -49,7 +53,7 @@ export function CourseEnrollmentChart() {
   
   return (
     <ChartContainer
-      title="Course Enrollment"
+      title={t('courseEnrollmentByCategory')}
       chartType="doughnut"
       data={chartData}
       labels={enrollmentData.map(item => item.category)}
