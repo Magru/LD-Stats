@@ -14,6 +14,7 @@ import GroupStats from "@/pages/GroupStats";
 import Settings from "@/pages/Settings";
 import { AuthProvider } from "@/hooks/useAuth";
 import { UserRoleProvider } from "@/hooks/useUserRole";
+import { LanguageProvider } from "@/hooks/useLanguage";
 
 function Router() {
   return (
@@ -35,16 +36,18 @@ function Router() {
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <AuthProvider>
-        <UserRoleProvider>
-          <TooltipProvider>
-            <MainLayout>
-              <Router />
-            </MainLayout>
-            <Toaster />
-          </TooltipProvider>
-        </UserRoleProvider>
-      </AuthProvider>
+      <LanguageProvider>
+        <AuthProvider>
+          <UserRoleProvider>
+            <TooltipProvider>
+              <MainLayout>
+                <Router />
+              </MainLayout>
+              <Toaster />
+            </TooltipProvider>
+          </UserRoleProvider>
+        </AuthProvider>
+      </LanguageProvider>
     </QueryClientProvider>
   );
 }
