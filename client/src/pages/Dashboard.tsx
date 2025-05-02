@@ -11,10 +11,12 @@ import { DateRange } from "react-day-picker";
 import { format } from "date-fns";
 import { useAuth } from "@/hooks/useAuth";
 import { useUserRole } from "@/hooks/useUserRole";
+import { useTranslation } from "@/hooks/useTranslation";
 
 export default function Dashboard() {
   const { user } = useAuth();
   const { role } = useUserRole();
+  const { t } = useTranslation();
   const [dateRange, setDateRange] = useState<{ startDate?: string; endDate?: string; preset?: string }>({
     preset: "year"
   });
@@ -39,9 +41,9 @@ export default function Dashboard() {
   return (
     <div>
       <div className="mb-6">
-        <h1 className="text-2xl font-heading font-bold">Analytics Dashboard</h1>
+        <h1 className="text-2xl font-heading font-bold">{t('dashboard')}</h1>
         <p className="mt-1 text-sm text-muted-foreground">
-          Comprehensive overview of your learning management system
+          {t('lmsAnalytics')}
         </p>
       </div>
       

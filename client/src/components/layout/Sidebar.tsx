@@ -110,7 +110,7 @@ export function Sidebar({ collapsed = false }: SidebarProps) {
                   "flex-shrink-0",
                   collapsed ? "w-6 h-6" : "w-5 h-5 mr-3"
                 )} />
-                {!collapsed && t(route.titleKey)}
+                {!collapsed && t(route.titleKey as TranslationKey)}
               </a>
             </Link>
           ))}

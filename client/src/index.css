@@ -149,6 +149,7 @@ html[dir="rtl"] .ml-2 {
 
 html[dir="rtl"] .mr-1, 
 html[dir="rtl"] .mr-2, 
+html[dir="rtl"] .mr-3, 
 html[dir="rtl"] .mr-4 {
   margin-right: 0;
 }
@@ -159,6 +160,10 @@ html[dir="rtl"] .mr-1 {
 
 html[dir="rtl"] .mr-2 {
   margin-left: 0.5rem;
+}
+
+html[dir="rtl"] .mr-3 {
+  margin-left: 0.75rem;
 }
 
 html[dir="rtl"] .mr-4 {
@@ -175,6 +180,16 @@ html[dir="rtl"] .ml-auto {
   margin-right: auto;
 }
 
+html[dir="rtl"] .pl-2 {
+  padding-left: 0;
+  padding-right: 0.5rem;
+}
+
+html[dir="rtl"] .pr-2 {
+  padding-right: 0;
+  padding-left: 0.5rem;
+}
+
 /* Flip icons that need direction adjustments */
 html[dir="rtl"] .icon-flip-rtl {
   transform: scaleX(-1);
@@ -187,4 +202,31 @@ html[dir="rtl"] .text-left {
 
 html[dir="rtl"] .text-right {
   text-align: left;
+}
+
+/* Chart and data direction in RTL */
+html[dir="rtl"] .recharts-cartesian-axis-tick-value {
+  text-anchor: start;
+}
+
+/* RTL dropdown/popover fixes */
+html[dir="rtl"] .items-end {
+  align-items: start;
+}
+
+html[dir="rtl"] .items-start {
+  align-items: end;
+}
+
+/* RTL flexbox direction adjustments */
+html[dir="rtl"] .flex-row {
+  flex-direction: row-reverse;
+}
+
+html[dir="rtl"] .space-x-2 > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-x-reverse: 1;
+}
+
+html[dir="rtl"] .space-x-4 > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-x-reverse: 1;
 }
