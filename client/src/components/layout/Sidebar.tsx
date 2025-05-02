@@ -2,6 +2,7 @@ import { Link, useLocation } from "wouter";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/hooks/useAuth";
 import { useTranslation } from "@/hooks/useTranslation";
+import { TranslationKey } from "@/lib/translations";
 import { RoleSwitcher } from "@/components/dashboard/RoleSwitcher";
 import { 
   BarChartBig, 
@@ -18,6 +19,12 @@ interface SidebarProps {
   collapsed?: boolean;
 }
 
+interface RouteItem {
+  titleKey: TranslationKey;
+  href: string;
+  icon: React.FC<{ className?: string }>;
+}
+
 export function Sidebar({ collapsed = false }: SidebarProps) {
   const [location] = useLocation();
   const { user } = useAuth();
@@ -25,42 +32,42 @@ export function Sidebar({ collapsed = false }: SidebarProps) {
   
   const routes = [
     {
-      title: "Overview",
+      titleKey: 'dashboard',
       href: "/",
       icon: BarChartBig,
     },
     {
-      title: "Courses",
+      titleKey: 'courses',
       href: "/courses",
       icon: BookOpen,
     },
     {
-      title: "Lessons",
+      titleKey: 'lessons',
       href: "/lessons",
       icon: FileText,
     },
     {
-      title: "Quizzes",
+      titleKey: 'quizzes',
       href: "/quizzes",
       icon: HelpCircle,
     },
     {
-      title: "Students",
+      titleKey: 'students',
       href: "/students",
       icon: User,
     },
     {
-      title: "Groups",
+      titleKey: 'groups',
       href: "/groups",
       icon: Users,
     },
     {
-      title: "Forums",
+      titleKey: 'forums',
       href: "/forums",
       icon: MessageSquare,
     },
     {
-      title: "Settings",
+      titleKey: 'settings',
       href: "/settings",
       icon: Settings,
     },
@@ -75,7 +82,7 @@ export function Sidebar({ collapsed = false }: SidebarProps) {
         {collapsed ? (
           <div className="text-xl font-bold text-primary mx-auto">LMS</div>
         ) : (
-          <h1 className="text-xl font-bold text-primary">LMS Analytics</h1>
+          <h1 className="text-xl font-bold text-primary">{t('lmsAnalytics')}</h1>
         )}
       </div>
       
@@ -103,7 +110,7 @@ export function Sidebar({ collapsed = false }: SidebarProps) {
                   "flex-shrink-0",
                   collapsed ? "w-6 h-6" : "w-5 h-5 mr-3"
                 )} />
-                {!collapsed && route.title}
+                {!collapsed && t(route.titleKey)}
               </a>
             </Link>
           ))}

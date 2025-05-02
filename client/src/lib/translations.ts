@@ -2,6 +2,7 @@
 export type TranslationKey = 
   | 'dashboard'
   | 'courses'
+  | 'lessons'
   | 'quizzes'
   | 'students'
   | 'forums'
@@ -102,6 +103,10 @@ export const translations: Translations = {
   courses: {
     en: 'Courses',
     he: 'קורסים'
+  },
+  lessons: {
+    en: 'Lessons',
+    he: 'שיעורים'
   },
   quizzes: {
     en: 'Quizzes',
