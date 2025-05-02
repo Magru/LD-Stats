@@ -6,9 +6,21 @@ mkdir -p build
 mkdir -p build/learndash-buddyboss-analytics
 mkdir -p build/learndash-buddyboss-analytics/includes
 mkdir -p build/learndash-buddyboss-analytics/admin
+mkdir -p build/learndash-buddyboss-analytics/admin/css
+mkdir -p build/learndash-buddyboss-analytics/admin/js
 mkdir -p build/learndash-buddyboss-analytics/public
+mkdir -p build/learndash-buddyboss-analytics/public/css
+mkdir -p build/learndash-buddyboss-analytics/public/js
 mkdir -p build/learndash-buddyboss-analytics/api
 mkdir -p build/learndash-buddyboss-analytics/languages
+mkdir -p build/learndash-buddyboss-analytics/dist
+
+# Компилируем React приложение для WordPress с помощью webpack
+echo "Компиляция React приложения для WordPress..."
+# Если у вас есть локальная установка webpack, используйте следующую команду:
+# npx webpack --config wp-webpack.config.js
+# Поскольку мы не можем изменять package.json, мы будем использовать стандартную сборку Vite
+npm run build
 
 # Копируем PHP файлы
 echo "Копирование PHP файлов..."
@@ -17,6 +29,10 @@ cp -r includes/* build/learndash-buddyboss-analytics/includes/
 cp -r admin/* build/learndash-buddyboss-analytics/admin/
 cp -r public/* build/learndash-buddyboss-analytics/public/
 cp -r api/* build/learndash-buddyboss-analytics/api/
+
+# Копируем скомпилированные React файлы
+echo "Копирование скомпилированных React файлов..."
+cp -r dist/* build/learndash-buddyboss-analytics/dist/
 
 # Создаем пустой POT файл для переводов
 echo "# Copyright (C) $(date +%Y)" > build/learndash-buddyboss-analytics/languages/learndash-buddyboss-analytics.pot

@@ -21,12 +21,40 @@ class LDBB_Analytics_Admin {
      * Register the JavaScript for the admin area.
      */
     public function enqueue_scripts() {
+        // Enqueue the main admin script
         wp_enqueue_script(
             'ldbb-analytics-admin',
             LDBB_ANALYTICS_PLUGIN_URL . 'admin/js/ldbb-analytics-admin.js',
             array('jquery'),
             LDBB_ANALYTICS_VERSION,
             false
+        );
+        
+        // Enqueue React bundle for dashboard
+        wp_enqueue_script(
+            'ldbb-analytics-react-bundle',
+            LDBB_ANALYTICS_PLUGIN_URL . 'dist/main.bundle.js',
+            array('jquery', 'ldbb-analytics-admin'),
+            LDBB_ANALYTICS_VERSION,
+            true
+        );
+        
+        // Enqueue React vendors
+        wp_enqueue_script(
+            'ldbb-analytics-react-vendors',
+            LDBB_ANALYTICS_PLUGIN_URL . 'dist/vendors.bundle.js',
+            array('jquery', 'ldbb-analytics-admin'),
+            LDBB_ANALYTICS_VERSION,
+            true
+        );
+        
+        // Enqueue React styles
+        wp_enqueue_style(
+            'ldbb-analytics-react-styles',
+            LDBB_ANALYTICS_PLUGIN_URL . 'dist/main.css',
+            array(),
+            LDBB_ANALYTICS_VERSION,
+            'all'
         );
     }
 

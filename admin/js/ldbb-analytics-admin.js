@@ -31,9 +31,30 @@
             );
         });
 
-        // In a real implementation, we would load the bundled React app here
-        // For WordPress integration, we need to use the WordPress admin hooks
-        console.log('LearnDash BuddyBoss Analytics: Ready to initialize React app with config:', window.LDBB_ANALYTICS);
+        // Set up REST API client helper
+        window.LDBB_ANALYTICS.apiRequest = apiRequest;
+
+        // Wait for React bundle to load and initialize
+        if (typeof window.LDBB_ANALYTICS_REACT !== 'undefined' && 
+            typeof window.LDBB_ANALYTICS_REACT.mountReactApp === 'function') {
+            
+            var pageName = window.LDBB_ANALYTICS.page || 'dashboard';
+            var containers = {
+                'dashboard': 'ldbb-analytics-root',
+                'course-stats': 'ldbb-analytics-course-stats-root',
+                'forum-stats': 'ldbb-analytics-forum-stats-root',
+                'group-stats': 'ldbb-analytics-group-stats-root',
+                'quiz-stats': 'ldbb-analytics-quiz-stats-root',
+                'user-stats': 'ldbb-analytics-user-stats-root',
+                'settings': 'ldbb-analytics-settings-root',
+            };
+            
+            if (containers[pageName]) {
+                window.LDBB_ANALYTICS_REACT.mountReactApp(containers[pageName], pageName);
+            }
+        } else {
+            console.log('LearnDash BuddyBoss Analytics: Waiting for React bundle to load...');
+        }
     }
 
     /**
@@ -49,8 +70,5 @@
             data: data || {}
         });
     }
-
-    // Expose the API helper to the global scope for React to use
-    window.LDBB_ANALYTICS.apiRequest = apiRequest;
 
 })(jQuery);
