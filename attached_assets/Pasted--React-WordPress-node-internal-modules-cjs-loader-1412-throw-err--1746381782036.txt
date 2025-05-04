@@ -1,0 +1,59 @@
+Компиляция React приложения для WordPress...
+node:internal/modules/cjs/loader:1412
+  throw err;
+  ^
+
+Error: Cannot find module '/Users/magru/Dev/Sylla/johnbryce.sylla.academy/stats/LD-Stats-main/node_modules/.bin/webpack'
+    at Function._resolveFilename (node:internal/modules/cjs/loader:1409:15)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1060:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1065:22)
+    at Function._load (node:internal/modules/cjs/loader:1214:37)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:234:24)
+    at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:151:5)
+    at node:internal/main/run_main_module:33:47 {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: []
+}
+
+Node.js v23.6.0
+Компиляция стандартного Vite проекта...
+
+> rest-express@1.0.0 build
+> vite build && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist
+
+sh: vite: command not found
+Копирование PHP файлов...
+Копирование скомпилированных React файлов...
+cp: dist/*: No such file or directory
+Создание ZIP архива...
+  adding: learndash-buddyboss-analytics/ (stored 0%)
+  adding: learndash-buddyboss-analytics/dist/ (stored 0%)
+  adding: learndash-buddyboss-analytics/includes/ (stored 0%)
+  adding: learndash-buddyboss-analytics/includes/class-ldbb-analytics.php (deflated 75%)
+  adding: learndash-buddyboss-analytics/includes/class-ldbb-analytics-loader.php (deflated 79%)
+  adding: learndash-buddyboss-analytics/includes/class-ldbb-analytics-i18n.php (deflated 48%)
+  adding: learndash-buddyboss-analytics/admin/ (stored 0%)
+  adding: learndash-buddyboss-analytics/admin/css/ (stored 0%)
+  adding: learndash-buddyboss-analytics/admin/css/ldbb-analytics-admin.css (deflated 69%)
+  adding: learndash-buddyboss-analytics/admin/js/ (stored 0%)
+  adding: learndash-buddyboss-analytics/admin/js/ldbb-analytics-admin.js (deflated 70%)
+  adding: learndash-buddyboss-analytics/admin/class-ldbb-analytics-admin.php (deflated 83%)
+  adding: learndash-buddyboss-analytics/admin/partials/ (stored 0%)
+  adding: learndash-buddyboss-analytics/admin/partials/ldbb-analytics-admin-groups.php (deflated 51%)
+  adding: learndash-buddyboss-analytics/admin/partials/ldbb-analytics-admin-users.php (deflated 51%)
+  adding: learndash-buddyboss-analytics/admin/partials/ldbb-analytics-admin-forums.php (deflated 51%)
+  adding: learndash-buddyboss-analytics/admin/partials/ldbb-analytics-admin-quizzes.php (deflated 51%)
+  adding: learndash-buddyboss-analytics/admin/partials/ldbb-analytics-admin-settings.php (deflated 82%)
+  adding: learndash-buddyboss-analytics/admin/partials/ldbb-analytics-admin-courses.php (deflated 51%)
+  adding: learndash-buddyboss-analytics/admin/partials/ldbb-analytics-admin-dashboard.php (deflated 52%)
+  adding: learndash-buddyboss-analytics/languages/ (stored 0%)
+  adding: learndash-buddyboss-analytics/languages/learndash-buddyboss-analytics.pot (deflated 5%)
+  adding: learndash-buddyboss-analytics/learndash-buddyboss-analytics.php (deflated 50%)
+  adding: learndash-buddyboss-analytics/public/ (stored 0%)
+  adding: learndash-buddyboss-analytics/public/class-ldbb-analytics-public.php (deflated 65%)
+  adding: learndash-buddyboss-analytics/public/css/ (stored 0%)
+  adding: learndash-buddyboss-analytics/public/js/ (stored 0%)
+  adding: learndash-buddyboss-analytics/api/ (stored 0%)
+  adding: learndash-buddyboss-analytics/api/class-ldbb-analytics-api.php (deflated 85%)
+Готово! Плагин упакован в build/learndash-buddyboss-analytics.zip

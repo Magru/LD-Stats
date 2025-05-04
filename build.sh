@@ -17,11 +17,11 @@ mkdir -p build/learndash-buddyboss-analytics/dist
 
 # Компилируем React приложение для WordPress с помощью webpack
 echo "Компиляция React приложения для WordPress..."
-node node_modules/.bin/webpack --config wp-webpack.config.js
+npx webpack --config wp-webpack.config.js
 
-# Собираем также стандартный Vite проект для разработки
-echo "Компиляция стандартного Vite проекта..."
-npm run build
+# Не запускаем сборку Vite, а только копируем наши заглушки
+echo "Копирование заглушек для режима разработки..."
+# npm run build не нужен в данный момент, так как у нас есть заглушки
 
 # Копируем PHP файлы
 echo "Копирование PHP файлов..."

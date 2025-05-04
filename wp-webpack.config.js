@@ -1,7 +1,11 @@
-const path = require('path');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+import path from 'path';
+import { fileURLToPath } from 'url';
+import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 
-module.exports = {
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+export default {
   mode: 'production',
   entry: {
     'wordpress-bundle': './client/src/wordpress-bundle.js'

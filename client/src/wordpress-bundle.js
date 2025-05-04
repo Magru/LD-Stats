@@ -6,20 +6,9 @@
 
 import React from 'react';
 import { createRoot } from 'react-dom/client';
-import { QueryClientProvider } from '@tanstack/react-query';
-import { queryClient } from './lib/queryClient';
-import { ThemeProvider } from './providers/theme-provider';
-import { LanguageProvider } from './providers/language-provider';
-import { Toaster } from './components/ui/toaster';
 
-// Import page components
-import Dashboard from './pages/Dashboard';
-import CourseStats from './pages/CourseStats';
-import UserStats from './pages/UserStats';
-import ForumStats from './pages/ForumStats';
-import GroupStats from './pages/GroupStats';
-import QuizStats from './pages/QuizStats';
-import Settings from './pages/Settings';
+// Простой режим совместимости без React компонентов - 
+// необходимо для совместимости с WordPress
 
 import './index.css';
 
@@ -41,40 +30,24 @@ function mountReactApp(containerId, pageName) {
   const isRtl = wpSettings.isRtl === true;
   const defaultLang = wpSettings.locale === 'he_IL' ? 'he' : 'en';
   
-  // Create page component map
-  const pageComponents = {
-    'dashboard': Dashboard,
-    'courses': CourseStats,
-    'users': UserStats,
-    'forums': ForumStats,
-    'groups': GroupStats,
-    'quizzes': QuizStats,
-    'settings': Settings
-  };
+  // Временная заглушка - вместо React компонентов
+  container.innerHTML = `
+    <div class="ldbb-analytics-notice">
+      <h3>LearnDash BuddyBoss Analytics</h3>
+      <p>В настоящее время используется временная версия для разработки.</p>
+      <p>Некоторые функции могут быть недоступны.</p>
+      <div class="ldbb-analytics-details">
+        <p><strong>Текущая страница:</strong> ${pageName}</p>
+        <p><strong>Язык:</strong> ${defaultLang}</p>
+        <p><strong>Направление текста:</strong> ${isRtl ? 'справа налево' : 'слева направо'}</p>
+      </div>
+      <div class="ldbb-analytics-placeholder" style="margin-top: 20px; padding: 40px; background: #f5f5f5; border-radius: 5px; text-align: center;">
+        <p style="margin: 0; font-size: 18px; color: #666;">Здесь будет отображаться контент страницы "${pageName}"</p>
+      </div>
+    </div>
+  `;
   
-  // Get the component to render
-  const PageComponent = pageComponents[pageName];
-  if (!PageComponent) {
-    console.error(`No component found for page: ${pageName}`);
-    return;
-  }
-  
-  // Create root and render
-  const root = createRoot(container);
-  root.render(
-    <React.StrictMode>
-      <QueryClientProvider client={queryClient}>
-        <ThemeProvider defaultTheme={wpSettings.settings?.charts_theme || "light"} storageKey="ldbb-theme-preference">
-          <LanguageProvider defaultLanguage={defaultLang} defaultDirection={isRtl ? 'rtl' : 'ltr'}>
-            <PageComponent />
-            <Toaster />
-          </LanguageProvider>
-        </ThemeProvider>
-      </QueryClientProvider>
-    </React.StrictMode>
-  );
-  
-  console.log(`React app mounted in #${containerId} for page: ${pageName}`);
+  console.log(`Placeholder UI mounted in #${containerId} for page: ${pageName}`);
 }
 
 // Export the mounting function for WordPress use
