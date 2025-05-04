@@ -1,0 +1,81 @@
+/**
+ * LearnDash BuddyBoss Analytics - Development Styles
+ * This file is a placeholder for the built CSS
+ */
+
+.ldbb-analytics-notice {
+  padding: 20px;
+  background: #f8f9fa;
+  border-left: 4px solid #4a6ee0;
+  margin-bottom: 20px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+}
+
+.ldbb-analytics-notice h3 {
+  margin-top: 0;
+  color: #333;
+}
+
+.ldbb-analytics-notice p {
+  margin: 0 0 10px 0;
+  color: #555;
+}
+
+.ldbb-analytics-notice code {
+  display: block;
+  background: #eee;
+  padding: 10px;
+  margin: 10px 0;
+  border-radius: 3px;
+  font-family: monospace;
+}
+
+/* App loading state */
+.ldbb-analytics-loading {
+  text-align: center;
+  padding: 30px;
+}
+
+.ldbb-analytics-loading span {
+  display: inline-block;
+  vertical-align: middle;
+  width: 20px;
+  height: 20px;
+  margin: 0 5px;
+  background: #4a6ee0;
+  border-radius: 100%;
+  animation: ldbb-analytics-loading 0.8s linear infinite alternate;
+}
+
+.ldbb-analytics-loading span:nth-child(1) {
+  animation-delay: 0s;
+}
+
+.ldbb-analytics-loading span:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.ldbb-analytics-loading span:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes ldbb-analytics-loading {
+  0% {
+    opacity: 0.5;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(-5px);
+  }
+}
+
+/* Error message */
+.ldbb-analytics-error {
+  background-color: #f8d7da;
+  color: #721c24;
+  padding: 20px;
+  border-radius: 5px;
+  border: 1px solid #f5c6cb;
+  margin-bottom: 20px;
+}
